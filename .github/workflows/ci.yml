@@ -1,5 +1,5 @@
 # Goal: I have to lint, build, test the code for frontend and backend
-# Then push them to Docker Hub
+# Then push them to Docker Hub ..
 
 name: CI
 
