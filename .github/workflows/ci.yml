@@ -51,9 +51,41 @@ jobs:
           push: true
           tags: karanclg/devboard-fe-master:latest
         
-  # backend:
-  #     steps:
-  #       -lint
-  #       -build
-  #       -test
-  #       -push
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.23'
+          go-version-file: 'go.mod'
+          cache-dependency-path: backend/go.sum
+
+      - name: Run Go formatter
+        run: go fmt
+        working-directory: backend
+
+      - name:Run Go vet
+        run: go vet
+        working-directory: backend
+
+      - name: go Test
+        run: go test
+        working-directory: backend
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: karanclg/devboard-backend:latest
