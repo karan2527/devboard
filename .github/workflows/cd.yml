@@ -3,12 +3,8 @@
 name: CD
 
 on:
-    workflow_run:
-        workflows: ['CI']
-        types: [completed]
-        branches:
-            - 'advanced'
-
+    workflow_call:
+    
 jobs:
     deploy:
         runs-on: self-hosted
@@ -29,3 +25,6 @@ jobs:
               run: |
                 docker compose pull
                 docker compose up -d
+
+  deploy:
+     needs: [frontend, backend]
